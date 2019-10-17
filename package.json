@@ -2,6 +2,7 @@
   "name": "react-github",
   "version": "0.1.0",
   "private": true,
+  "main": "index.js",
   "dependencies": {
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
@@ -25,7 +26,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "next",
+    "dev": "node server.js",
     "build": "next build",
     "start": "next start"
   },
