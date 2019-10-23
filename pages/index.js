@@ -32,10 +32,7 @@ export default () => {
     }
     return (
        <>
-           <Link href={"/a?id=1"} as={"/a/1"}>
-               <Button>Go Page A</Button>
-           </Link>
-           <Button onClick={gotoTestB}>Go Page B</Button>
+           <span>Index</span>
        </>
 
     )
