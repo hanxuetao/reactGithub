@@ -1,0 +1,1 @@
+{"version":3,"file":"static/chunks/1.js","sources":["webpack:///./components/comp.jsx"],"sourcesContent":["export default ({children}) => <span>Async Load Component</span>"],"mappings":";;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;;;;A","sourceRoot":""}

@@ -1,0 +1,1 @@
+export default ({children}) => <span>Async Load Component</span>
