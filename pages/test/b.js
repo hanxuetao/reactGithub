@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useReducer} from 'react'
 import {Button} from "antd";
 
 class MyCount extends React.Component {
@@ -25,12 +25,26 @@ class MyCount extends React.Component {
     }
 }
 
+function countReducer(state, action) {
+    switch (action.type){
+        case 'add':
+            return state + 1  // need change object itself, not just change attribute within object otherwise the component cannot detect the updates
+        case 'minus':
+            return state - 1
+        default:
+            return state
+    }
+}
+
 function MyCountFunc() {
-    const [count, setCount] = useState(0) //Array Destructuring Assignment [a,b] = 0
+    // const [count, setCount] = useState(0) //Array Destructuring Assignment [a,b] = 0
+
+    const [count, dispatchCount] = useReducer(countReducer, 0)
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCount(count => count + 1)
+            // setCount(count => count + 1)
+            dispatchCount({type: 'minus'})
         },1000)
 
         return () => clearInterval(interval)
