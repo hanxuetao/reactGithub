@@ -1,4 +1,5 @@
-import React, {useState, useEffect, useReducer, useLayoutEffect} from 'react'
+import React, {useState, useEffect, useReducer, useLayoutEffect, useContext} from 'react'
+import MyContext from '../../lib/my-context'
 import {Button} from "antd";
 
 class MyCount extends React.Component {
@@ -41,6 +42,7 @@ function MyCountFunc() {
 
     const [count, dispatchCount] = useReducer(countReducer, 0)
     const [name, setName] = useState('han')
+    const context = useContext(MyContext)
 
     // useEffect(() => {
     //     const interval = setInterval(() => {
@@ -67,6 +69,7 @@ function MyCountFunc() {
         <div>
             <input vaule={name} onChange={((e) => e.target.value)} />
             <button onClick={() => dispatchCount({ type:"add"})}>{count}</button>
+            <p>{context}</p>
         </div>
     )
 }
