@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useReducer} from 'react'
+import React, {useState, useEffect, useReducer, useLayoutEffect} from 'react'
 import {Button} from "antd";
 
 class MyCount extends React.Component {
@@ -40,17 +40,35 @@ function MyCountFunc() {
     // const [count, setCount] = useState(0) //Array Destructuring Assignment [a,b] = 0
 
     const [count, dispatchCount] = useReducer(countReducer, 0)
+    const [name, setName] = useState('han')
 
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         // setCount(count => count + 1)
+    //         dispatchCount({type: 'minus'})
+    //     },1000)
+    //
+    //     return () => clearInterval(interval)
+    // }, [])
+
+    //useEffect will work after dom loaded
     useEffect(() => {
-        const interval = setInterval(() => {
-            // setCount(count => count + 1)
-            dispatchCount({type: 'minus'})
-        },1000)
+        console.log('effect invoked')
+        return () => console.log('effect detected')
+    }, [count]) // the second param decide useEffect update or not.
 
-        return () => clearInterval(interval)
-    }, [])
+    //useLayoutEffect will work before dom loaded but it will affect the speed of web page loading
+    useLayoutEffect(() => {
+        console.log('Layout effect invoked')
+        return () => console.log('Layout effect detected')
+    },[count])
 
-    return <span>{count}</span>
+    return (
+        <div>
+            <input vaule={name} onChange={((e) => e.target.value)} />
+            <button onClick={() => dispatchCount({ type:"add"})}>{count}</button>
+        </div>
+    )
 }
 
 export default MyCountFunc
