@@ -3,6 +3,10 @@
     "static/development/dll/dll_490c927f35d3340e728e.js"
   ],
   "pages": {
+    "/": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
     "/_app": [
       "static/runtime/webpack.js",
       "static/css/styles.chunk.css",
@@ -17,7 +21,11 @@
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],
-    "/test/b": [
+    "/index": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
+    "/next/dist/pages/_error": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ]
