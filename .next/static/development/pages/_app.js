@@ -97,7 +97,9 @@ function getOrCreateStore(initialState) {
   }
 
   return window[__NEXT_REDUX_STORE__];
-}
+} // At that time WithReduxApp will declare a new store object also when server side rendering
+// Read the State data on html and save it in the store object
+
 
 /* harmony default export */ __webpack_exports__["default"] = (function (Comp) {
   var WithReduxApp =
@@ -127,7 +129,8 @@ function getOrCreateStore(initialState) {
 
         if (pageProps) {
           pageProps.test = '123';
-        }
+        } // then pass the reduxStore to the Comp then _app.js's Provider will get it
+
 
         return react__WEBPACK_IMPORTED_MODULE_10___default.a.createElement(Comp, Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_3__["default"])({
           Component: Component,
@@ -139,7 +142,10 @@ function getOrCreateStore(initialState) {
     }]);
 
     return WithReduxApp;
-  }(react__WEBPACK_IMPORTED_MODULE_10___default.a.Component); //if the hoc package the component, the hoc should inherit getInitialProps from the Component
+  }(react__WEBPACK_IMPORTED_MODULE_10___default.a.Component); // if the hoc package the component, the hoc should inherit getInitialProps from the Component
+  // getInitialProps will be loaded when 1.server side render. 2.client side page loaded.
+  // once redux-store need to be loaded at server side. That will be better about put store initialization in getInitialProps.
+  // then the store will be rendered on html
 
 
   WithReduxApp.getInitialProps =
