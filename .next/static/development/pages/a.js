@@ -33915,7 +33915,7 @@ _babel_runtime_corejs2_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(f
 
 /***/ }),
 
-/***/ 6:
+/***/ 4:
 /*!************************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2Fa&absolutePagePath=%2FUsers%2Fxuetaohan%2FDesktop%2FreactGithub-master%2Fpages%2Fa.js ***!
   \************************************************************************************************************************************/
@@ -33938,5 +33938,5 @@ module.exports = dll_13346faca0e924a89b24;
 
 /***/ })
 
-},[[6,"static/runtime/webpack.js"]]]);
+},[[4,"static/runtime/webpack.js"]]]);
 //# sourceMappingURL=a.js.map
