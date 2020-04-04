@@ -3,6 +3,7 @@ const Router = require('koa-router')
 const next = require('next')
 const session = require('koa-session')
 const Redis = require('ioredis')
+const auth = require('./server/auth')
 
 const RedisSessionStore = require('./server/session-store')
 
@@ -27,6 +28,8 @@ app.prepare().then(() => {
 
     server.use(session(SESSION_CONFIG, server))
 
+    auth(server)
+
     server.use(async (ctx, next) => {
             console.log('session is:', ctx.session)
         await next()
@@ -41,19 +44,17 @@ app.prepare().then(() => {
         ctx.respond = false
     })
 
-    router.get('/set/user', async (ctx) => {
-        // ctx.respond = false
-        ctx.session.user = {
-            name:'Han',
-            age: 99
+    router.get('/api/user/:id', async (ctx) => {
+        const user = ctx.session.userInfo
+        console.log(user)
+        if(!user) {
+            ctx.status = 401
+            ctx.body = 'Need Login'
+        } else {
+            ctx.body = user
+            ctx.set('Content-Type', 'application/json')
         }
-        ctx.body = 'set session success'
-    })
-
-    router.get('/detele/user', async (ctx) => {
-        // ctx.respond = false
-        ctx.session = null
-        ctx.body = 'delete session success'
+        ctx.body = ctx.session.userInfo
     })
 
     server.use(router.routes())

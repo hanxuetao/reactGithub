@@ -1,12 +1,4 @@
 {
-  "../components/comp": [
-    {
-      "id": "./components/comp.jsx",
-      "name": "./components/comp.jsx",
-      "file": "static/chunks/1.js",
-      "publicPath": "static/chunks/1.js"
-    }
-  ],
   "./noop": [
     {
       "id": "./node_modules/next/dist/client/noop.js",
