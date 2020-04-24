@@ -1,73 +1,125 @@
-import { useEffect } from 'react'
-import axios from 'axios'
-
-import Link from 'next/link'
-import Router from 'next/router'
-import { Button } from 'antd'
-import {connect} from 'react-redux'
-import { add } from '../store/store'
+import { Button, Icon, Tabs } from "antd";
 import getConfig from 'next/config'
+import { connect } from 'react-redux'
+import Repo from '../components/repo'
 
+const api = require('../lib/api')
 const { publicRuntimeConfig } = getConfig()
 
-const Index = ({counter, username, rename, add}) => {
-    const events = [
-        'routeChangeStart',
-        'routeChangeComplete',
-        'routeChangeError',
-        'beforeHistoryChange',
-        'hashChangeStart',
-        'hashChangeComplete',
-    ]
 
-    function makeEvent(type) {
-        return (...args) => {
-            console.log(type, ...args)
-        }
+function Index ({ userRepos, userStaredRepos, user }) {
+    console.log(userRepos, userStaredRepos )
+    if(!user || !user.id){
+        return (
+            <div className="root">
+                <p>Please Log In</p>
+                <Button type="primary" href={publicRuntimeConfig.OAUTH_URL}>Click Login</Button>
+                <style jsx>{`
+                .root{
+                    height: 400px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                }
+                `}</style>
+            </div>
+        )
     }
-
-    events.forEach(event => {
-        Router.events.on(event, makeEvent(event))
-    })
-
-    function gotoTestB() {
-        Router.push({
-            pathname:'/test/b',
-            query:{
-                id:2
-            }
-        }, '/test/b/2')
-    }
-
-    useEffect(() => {
-        axios.get('/api/user/info').then(resp => console.log(resp))
-    },[])
-
     return (
-       <>
-           <span>Count: {counter}</span>
-           <a>Username: {username}</a>
-           <input value={username} onChange={(e) => rename(e.target.value)}/>
-           <button onClick={() => add(counter)}>ADD</button>
-           <a href={publicRuntimeConfig.OAUTH_URL}>Login</a>
-       </>
-
+        <div className="root">
+            <div className="user-info">
+                <img src={user.avatar_url} alt="user avatar" className="avatar" />
+                <span className="login">{ user.login }</span>
+                <span className="name">{ user.name }</span>
+                <span className="bio">{user.bio}</span>
+                <p className="email">
+                    <Icon type="mail" style={{ marginRight: 10 }}> </Icon>
+                    <a href={`mailto:${user.email}`}>{user.email}</a>
+                </p>
+            </div>
+            <div className="user-repos">
+                <Tabs defaultActiveKey="1" animated={false}>
+                    <Tabs.TabPane tab="Your Repository" key="1">
+                        {userRepos.map(repo => (
+                            <Repo repo={repo} />
+                        ))}
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab="Your Star Repository" key="2">
+                        {userStaredRepos.map(repo => (
+                            <Repo repo={repo} />
+                        ))}
+                    </Tabs.TabPane>
+                </Tabs>
+            </div>
+            <style jsx>{`
+             .root {
+              display: flex;
+              align-items: flex-start;
+              padding: 20px 0;  
+             }
+             .user-info{
+              width: 200px;
+              margin-right: 40px;
+              flex-shrink: 0,
+              display: flex;
+              flex-direction: column;  
+             }
+             .login{
+             font-weight: 800;
+             font-size: 20px;
+             margin-top: 20px;
+             }
+             .name{
+             font-size: 16px;
+             color: #777;
+             }
+             .bio{
+             margin-top: 20px;
+             color: #333
+             }
+             .avatar{
+             width: 100%;
+             border-radius: 5px;
+             }
+              .user-repos {
+             flex-grow: 1;
+            }
+            `}</style>
+        </div>
     )
 }
 
-Index.getInitialProps = async ({ reduxStore }) => {
-    reduxStore.dispatch(add(3))
-    return {}
+Index.getInitialProps = async ({ ctx, reduxStore }) => {
+
+    const user = reduxStore.getState().user
+    console.log(reduxStore)
+    if(!user || !user.id) {
+        return {
+            isLogin: false
+        }
+    }
+
+    const userRepos = await api.request(
+        {
+        url: '/user/repos',
+        },
+        ctx.req, ctx.res)
+
+    const userStaredRepos = await api.request({
+        url: '/user/starred',
+    },
+        ctx.req, ctx.res)
+
+    return {
+        isLogin: true,
+        userRepos: userRepos.data,
+        userStaredRepos: userStaredRepos.data
+    }
 }
 
-export default connect(function mapStateToProps(state) {
+export default connect(function mapState(state) {
     return {
-        counter: state.counter.count,
-        username: state.user.username
-    }
-}, function mapDispatchToProps(dispatch){
-    return {
-        add: (num) => dispatch({ type: 'ADD', num}),
-        rename: (name) => dispatch({ type: 'UPDATE_USERNAME', name})
+        user: state.user,
     }
 })(Index)

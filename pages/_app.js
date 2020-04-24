@@ -2,15 +2,44 @@ import App, { Container } from 'next/app'
 import {Provider} from 'react-redux'
 import MyContext from '../lib/my-context'
 import Layout from '../components/Layout'
+import Router from 'next/router'
+import Link from 'next/link'
+import axios from 'axios'
 import 'antd/dist/antd.css';
 import {Button} from "antd";
-
+import PageLoading from '../components/pageLoading'
 import withRedux from '../lib/withRedux'
 
 class MyApp extends App {
     state = {
-        context:'value'
+        context:'value',
+        loading: false
     }
+
+    startLoading = () => {
+        this.setState({
+            loading: true
+        })
+    }
+
+    stopLoading = () => {
+        this.setState({
+            loading: false
+        })
+    }
+
+    componentDidMount() {
+        Router.events.on('routeChangeStart', this.startLoading)
+        Router.events.on('routeChangeComplete', this.stopLoading)
+        Router.events.on('routeChangeError', this.stopLoading)
+    }
+
+    componentWillUnmount() {
+        Router.events.off('routeChangeStart', this.startLoading)
+        Router.events.off('routeChangeComplete', this.stopLoading)
+        Router.events.off('routeChangeError', this.stopLoading)
+    }
+
     static async getInitialProps(ctx){
         const { Component } = ctx
         let pageProps = {}
@@ -26,14 +55,14 @@ class MyApp extends App {
         const { Component, pageProps, reduxStore } = this.props
         return (
             <Container>
-                <Layout>
-                    <Provider store={reduxStore}>
-                    <MyContext.Provider value={this.state.context}>
-                        <Component {...pageProps} />
-                        <Button onClick={() => this.setState({context: `${this.state.context}1`})}>update context</Button>
-                    </MyContext.Provider>
-                    </Provider>
-                </Layout>
+                <Provider store={reduxStore}>
+                    {this.state.loading ? <PageLoading /> : null}
+                    <Layout>
+                        <MyContext.Provider value={this.state.context}>
+                            <Component {...pageProps} />
+                        </MyContext.Provider>
+                    </Layout>
+                </Provider>
             </Container>
         )
     }
